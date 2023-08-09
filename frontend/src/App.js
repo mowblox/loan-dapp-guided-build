@@ -13,8 +13,13 @@ function App() {
   const [loanAmount, setLoanAmount] = useState(1);
   const { status, connect, account, chainId, ethereum } = useMetaMask();
 
-  function takeLoan() {
-    loanContract.takeLoan(loanAmount);
+  async function takeLoan() {
+    // Get Access To Browser Provider via MetaMask
+    const provider = new ethers.BrowserProvider(ethereum);
+    // Get Access To Signer i.e Selected Metamask Account
+    const signer = await provider.getSigner();
+    // Make Smart Contract Method/Function Call
+    loanContract.connect(signer).takeLoan(loanAmount, { value: loanAmount * 1.35 });
   }
 
   return (
