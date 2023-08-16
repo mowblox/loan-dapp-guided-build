@@ -3,6 +3,9 @@
 
 name: Blockchain CI
 
+env:
+  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+
 on: [push]
 
 jobs:
