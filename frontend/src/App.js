@@ -9,7 +9,7 @@ import { usePromiseTracker } from 'react-promise-tracker';
 import Loader from 'react-promise-loader';
 
 const ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
-const MUMBAI_RPC = process.env.REACT_APP_INFURA_MUMBAI_RPC;
+const MUMBAI_RPC = process.env.REACT_APP_MUMBAI_RPC;
 
 const loanContract = new ethers.Contract(ADDRESS, ABI);
 
