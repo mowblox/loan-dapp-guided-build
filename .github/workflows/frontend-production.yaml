@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - master
-      - next
+      - main
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
