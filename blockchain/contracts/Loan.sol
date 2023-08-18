@@ -5,12 +5,12 @@ contract Loan {
     // Collateral Rate 135%
     // uint _collateralRate = 135;
 
-    event LoanDisbursed(address, uint);
+    event LoanDisbursed(address indexed, uint);
 
     // User to take loan
     function takeLoan(uint _loanAmount) public payable {
         // Check If Loan Can be given
-        // require(address(this).balance > _loanAmount, "No Money at the bank");
+        require(address(this).balance > _loanAmount, "No Money at the bank");
         // Check if user has collateral
         require(
             msg.value >= ((_loanAmount * 135) / 100),
@@ -22,4 +22,8 @@ contract Loan {
     }
 
     // User to repay loan
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }
