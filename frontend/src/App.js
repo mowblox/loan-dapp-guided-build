@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import { useMetaMask } from "metamask-react";
 import { ethers } from 'ethers';
@@ -16,7 +16,7 @@ const loanContract = new ethers.Contract(ADDRESS, ABI);
 function App() {
   const [loanAmount, setLoanAmount] = useState(0);
   const [logs, setLogs] = useState([]);
-  const { status, connect, account, chainId, ethereum } = useMetaMask();
+  const { status, connect, account, chainId, ethereum, switchChain, addChain } = useMetaMask();
 
   useEffect(() => {
     // Define Get Logs Function
@@ -42,6 +42,21 @@ function App() {
   }, [ethereum, account, chainId]);
 
   async function takeLoan() {
+    // Switch Chain If Not Correctly Selected
+    if (chainId !== '0x13881') {
+      try {
+        await switchChain('0x13881');
+      } catch (error) {
+        // If Failure Atempt Add Chain To Metamask
+        await addChain({
+          chainId: "0x13881",
+          chainName: "Matic Mumbai",
+          nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+          rpcUrls: ["https://rpc-mumbai.maticvigil.com/"],
+          blockExplorerUrls: ["https://mumbai.polygonscan.com/"]
+        });
+      }
+    }
     // Get Access To Browser Provider via MetaMask
     const provider = new ethers.providers.Web3Provider(ethereum);
     // Get Access To Signer i.e Selected Metamask Account
@@ -56,19 +71,17 @@ function App() {
   return (
     <div className="App container">
       <Loader promiseTracker={usePromiseTracker} color={'#3d5e61'} background={'rgba(255,255,255,.5)'} />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
+      <header className="App-header"><br />
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
+        <p>Welcome To DecentraLoans</p>
+        {/* <a
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
         >
           Learn React
-        </a>
+        </a> */}
         {status === "initializing" && <div>Synchronisation with MetaMask ongoing...</div>}
 
         {status === "unavailable" && <div>MetaMask not available :(</div>}
