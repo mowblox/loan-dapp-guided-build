@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import { useMetaMask } from "metamask-react";
 import { ethers } from 'ethers';
@@ -71,19 +71,17 @@ function App() {
   return (
     <div className="App container">
       <Loader promiseTracker={usePromiseTracker} color={'#3d5e61'} background={'rgba(255,255,255,.5)'} />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
+      <header className="App-header"><br />
+        {/* <img src={logo} className="App-logo" alt="logo" /> */}
+        <p>Welcome To DecentraLoans</p>
+        {/* <a
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
         >
           Learn React
-        </a>
+        </a> */}
         {status === "initializing" && <div>Synchronisation with MetaMask ongoing...</div>}
 
         {status === "unavailable" && <div>MetaMask not available :(</div>}
