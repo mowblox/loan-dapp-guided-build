@@ -1,9 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-contract Loan {
+import "@opengsn/contracts/src/ERC2771Recipient.sol";
+
+contract Loan is ERC2771Recipient {
     // Collateral Rate 135%
     // uint _collateralRate = 135;
+
+    constructor(address forwarder) {
+        _setTrustedForwarder(forwarder);
+    }
 
     event LoanDisbursed(address indexed, uint);
 
@@ -17,8 +23,8 @@ contract Loan {
             "Not enough collateral"
         );
         // Give the loan
-        payable(msg.sender).transfer(_loanAmount);
-        emit LoanDisbursed(msg.sender, _loanAmount);
+        payable(_msgSender()).transfer(_loanAmount);
+        emit LoanDisbursed(_msgSender(), _loanAmount);
     }
 
     // User to repay loan

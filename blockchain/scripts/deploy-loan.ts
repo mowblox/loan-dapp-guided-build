@@ -5,7 +5,7 @@ async function main() {
 
     console.log("Deploying contracts with the account:", deployer.address);
 
-    const loan = await ethers.deployContract("Loan");
+    const loan = await ethers.deployContract("Loan", ['0xB2b5841DBeF766d4b521221732F9B618fCf34A87']);
 
     console.log("Loan address:", await loan.getAddress());
 }

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { trackPromise } from 'react-promise-tracker';
 import { usePromiseTracker } from 'react-promise-tracker';
 import Loader from 'react-promise-loader';
+import { RelayProvider } from '@opengsn/provider';
 
 const ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 const MUMBAI_RPC = process.env.REACT_APP_MUMBAI_RPC;
@@ -16,7 +17,7 @@ const loanContract = new ethers.Contract(ADDRESS, ABI);
 function App() {
   const [loanAmount, setLoanAmount] = useState(0);
   const [logs, setLogs] = useState([]);
-  const { status, connect, account, chainId, ethereum, switchChain, addChain } = useMetaMask();
+  const { status, connect, account, chainId, ethereum } = useMetaMask();
 
   useEffect(() => {
     // Define Get Logs Function
@@ -42,23 +43,18 @@ function App() {
   }, [ethereum, account, chainId]);
 
   async function takeLoan() {
-    // Switch Chain If Not Correctly Selected
-    if (chainId !== '0x13881') {
-      try {
-        await switchChain('0x13881');
-      } catch (error) {
-        // If Failure Atempt Add Chain To Metamask
-        await addChain({
-          chainId: "0x13881",
-          chainName: "Matic Mumbai",
-          nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
-          rpcUrls: ["https://rpc-mumbai.maticvigil.com/"],
-          blockExplorerUrls: ["https://mumbai.polygonscan.com/"]
-        });
+    // Prepare Relay Provider
+    const relayProvider = await RelayProvider.newProvider({
+      provider: ethereum,
+      config: {
+        paymasterAddress: '0x144bb91bB73021416cBd784c0679a0F93Bf9C4FE',
+        loggerConfiguration: {
+          logLevel: 'debug'
+        }
       }
-    }
+    }).init()
     // Get Access To Browser Provider via MetaMask
-    const provider = new ethers.providers.Web3Provider(ethereum);
+    const provider = new ethers.providers.Web3Provider(relayProvider);
     // Get Access To Signer i.e Selected Metamask Account
     const signer = provider.getSigner();
     // Make Smart Contract Method/Function Call
